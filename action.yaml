@@ -1,0 +1,6 @@
+name: 'Lodestar'
+description: 'Use the Lodestar Cli'
+author: LodestarCi
+runs:
+  using: 'node12'
+  main: "dist/index.js"
