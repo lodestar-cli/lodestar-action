@@ -1,6 +1,9 @@
-name: 'Lodestar'
+name: 'lodestar-action'
 description: 'Use the Lodestar Cli'
 author: LodestarCi
+branding:
+  icon: git-pull-request
+  color: blue
 inputs:
   git-user:
     description: 'user to authenticate with'
