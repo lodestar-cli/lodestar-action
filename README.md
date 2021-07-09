@@ -1,10 +1,10 @@
-# lodestar-github-action
+# lodestar-action
 
 A github action for executing the lodestar cli
 
 ## Description
 
-The Lodestar cli is a way to manage your kuberenetes applications through various environments until they land in production.  This action is a way to easily pull in the cli and execute it in your GitHub Workflows.
+The [Lodestar](https://github.com/lodestar-cli/lodestar) cli is a way to manage your kuberenetes applications through various environments until they land in production.  This action is a way to easily pull in the cli and execute it in your GitHub Workflows.
 
 ## How to Use
 
@@ -12,7 +12,7 @@ The lodestar-action installs the lodestar cli and makes 100% of its features ava
 
 ### App Push
 
-    - uses: lodestar-action
+    - uses: lodestar-cli/lodestar-action@v0.2.0
         with:
           git-user: ${{ secrets.GIT_USER }}
           git-token: ${{ secrets.GIT_TOKEN }}
@@ -23,7 +23,7 @@ The lodestar-action installs the lodestar cli and makes 100% of its features ava
 
 ### App Promote
 
-    - uses: lodestar-action
+    - uses: lodestar-cli/lodestar-action@v0.2.0
         with:
           git-user: ${{ secrets.GIT_USER }}
           git-token: ${{ secrets.GIT_TOKEN }}
