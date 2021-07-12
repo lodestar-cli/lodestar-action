@@ -8,13 +8,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Set SHA
+        id: keys
+        run: echo "::set-output name=tag::$(git rev-parse --short HEAD)"
       - uses: ./
         with:
           git-user: ${{ secrets.GIT_USER }}
           git-token: ${{ secrets.GIT_TOKEN }}
           command: app push
           config-path: test/test-config.yaml
-          yaml-keys: tag=1234567
+          yaml-keys: tag=${{ steps.keys.outputs.tag }}
           dest-environment: dev
       - uses: ./
         with:
