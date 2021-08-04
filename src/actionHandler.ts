@@ -1,4 +1,6 @@
 import * as core from '@actions/core';
+import { PlatformPaths } from "./platform_paths";
+import * as path from 'path';
 
 export class ActionHandler{
     readonly inputs: Inputs;
@@ -24,5 +26,22 @@ export class ActionHandler{
 
     public async getInputs(): Promise<Inputs> {
         return this.inputs
+    }
+
+    public async setLodestarPath(platform: string): Promise<void> {
+        switch (platform) {
+            case "Linux":
+                core.addPath(PlatformPaths.linux);
+
+            break;
+            case "Windows":
+                core.addPath(PlatformPaths.windows);
+            break;
+            case "Darwin":
+                core.addPath(PlatformPaths.darwin);
+            break;
+            default:
+                throw new Error(`unsupported platform ${platform}`)
+        }
     }
 }

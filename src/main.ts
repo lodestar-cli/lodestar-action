@@ -18,11 +18,13 @@ async function main(): Promise<void> {
 
     await binary.install();
 
+    await action.setLodestarPath(platform);
+
     if (inputs.command == "install") {
       process.exit(0);
     }
 
-    let lodestar: LodestarHandler = new LodestarHandler(platform);
+    let lodestar: LodestarHandler = new LodestarHandler();
   
     await lodestar.runCommand(inputs);
 

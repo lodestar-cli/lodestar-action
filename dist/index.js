@@ -8074,16 +8074,6 @@ var __webpack_exports__ = {};
 // ESM COMPAT FLAG
 __nccwpck_require__.r(__webpack_exports__);
 
-;// CONCATENATED MODULE: ./src/platform_paths.ts
-var PlatformPaths;
-(function (PlatformPaths) {
-    PlatformPaths["windows"] = "C:\\User\\runner";
-    PlatformPaths["darwin"] = "/Users/runner";
-    PlatformPaths["linux"] = "/home/runner";
-})(PlatformPaths || (PlatformPaths = {}));
-
-// EXTERNAL MODULE: external "path"
-var external_path_ = __nccwpck_require__(5622);
 // EXTERNAL MODULE: ./node_modules/@actions/exec/lib/exec.js
 var exec = __nccwpck_require__(1514);
 ;// CONCATENATED MODULE: ./src/lodestarHandler.ts
@@ -8097,24 +8087,8 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
     });
 };
 
-
-
 class LodestarHandler {
-    constructor(platform) {
-        switch (platform) {
-            case "Linux":
-                this.lodestarPath = external_path_.join(PlatformPaths.linux, "lodestar");
-                break;
-            case "Windows":
-                this.lodestarPath = external_path_.join(PlatformPaths.windows, "lodestar");
-                break;
-            case "Darwin":
-                this.lodestarPath = external_path_.join(PlatformPaths.darwin, "lodestar");
-                break;
-            default:
-                throw new Error(`unsupported platform ${platform}`);
-        }
-    }
+    constructor() { }
     runCommand(inputs) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -8161,7 +8135,7 @@ class LodestarHandler {
     appPromote(username, token, appConfig, srcEnvironment, destEnvironment) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield exec.exec(this.lodestarPath, ["app", "promote", "--username", username, "--token", token,
+                yield exec.exec("lodestar", ["app", "promote", "--username", username, "--token", token,
                     "--config-path", appConfig, "--src-env", srcEnvironment, "--dest-env", destEnvironment]);
             }
             catch (error) {
@@ -8174,9 +8148,19 @@ class LodestarHandler {
 
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __nccwpck_require__(5747);
+// EXTERNAL MODULE: external "path"
+var external_path_ = __nccwpck_require__(5622);
 // EXTERNAL MODULE: ./node_modules/axios/index.js
 var axios = __nccwpck_require__(6545);
 var axios_default = /*#__PURE__*/__nccwpck_require__.n(axios);
+;// CONCATENATED MODULE: ./src/platform_paths.ts
+var PlatformPaths;
+(function (PlatformPaths) {
+    PlatformPaths["windows"] = "C:\\User\\runner";
+    PlatformPaths["darwin"] = "/Users/runner";
+    PlatformPaths["linux"] = "/home/runner";
+})(PlatformPaths || (PlatformPaths = {}));
+
 // EXTERNAL MODULE: ./node_modules/@actions/tool-cache/lib/tool-cache.js
 var tool_cache = __nccwpck_require__(7784);
 ;// CONCATENATED MODULE: ./src/binaryHandler.ts
@@ -8301,6 +8285,7 @@ var actionHandler_awaiter = (undefined && undefined.__awaiter) || function (this
     });
 };
 
+
 class ActionHandler {
     constructor() {
         this.inputs = this.setInputs();
@@ -8321,6 +8306,23 @@ class ActionHandler {
     getInputs() {
         return actionHandler_awaiter(this, void 0, void 0, function* () {
             return this.inputs;
+        });
+    }
+    setLodestarPath(platform) {
+        return actionHandler_awaiter(this, void 0, void 0, function* () {
+            switch (platform) {
+                case "Linux":
+                    core.addPath(PlatformPaths.linux);
+                    break;
+                case "Windows":
+                    core.addPath(PlatformPaths.windows);
+                    break;
+                case "Darwin":
+                    core.addPath(PlatformPaths.darwin);
+                    break;
+                default:
+                    throw new Error(`unsupported platform ${platform}`);
+            }
         });
     }
 }
@@ -8350,10 +8352,11 @@ function main() {
             let inputs = yield action.getInputs();
             let binary = new BinaryHandler(platform, inputs.version);
             yield binary.install();
+            yield action.setLodestarPath(platform);
             if (inputs.command == "install") {
                 process.exit(0);
             }
-            let lodestar = new LodestarHandler(platform);
+            let lodestar = new LodestarHandler();
             yield lodestar.runCommand(inputs);
         }
         catch (error) {
