@@ -76,7 +76,7 @@ export class BinaryHandler {
     
             throw new Error("no binaries match platform: "+ this.platform)
         } catch (error) {
-            console.log(`error getting assett ${error}`);
+            console.log(`error getting asset ${error}`);
             process.exit(1);
         }
     }

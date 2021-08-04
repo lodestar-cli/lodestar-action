@@ -1,28 +1,14 @@
-import { PlatformPaths } from "./platform_paths";
 import * as path from 'path';
 import * as exec from '@actions/exec';
 
 export class LodestarHandler {
-    lodestarPath: string;
-
-    public constructor(platform: string) {
-        switch (platform) {
-            case "Linux":
-                this.lodestarPath = path.join(PlatformPaths.linux, "lodestar")
-            break;
-            case "Windows":
-                this.lodestarPath = path.join(PlatformPaths.windows, "lodestar")
-            break;
-            case "Darwin":
-                this.lodestarPath = path.join(PlatformPaths.darwin, "lodestar")
-            break;
-            default:
-                throw new Error(`unsupported platform ${platform}`)
-        }
-    }
+    public constructor() {}
 
     public async runCommand(inputs: Inputs): Promise<void> {
         try {
+            if (inputs.gitToken == "" || inputs.gitUser == "" || inputs.configPath == "") {
+                throw new Error(`a valid user, token, and path to an app config file must be set when attempting to run lodestar with this action`)
+            }
             console.log("executing lodestar...")
             switch (inputs.command) {
                 case "app push":
@@ -49,7 +35,7 @@ export class LodestarHandler {
 
     private async appPush(username: string, token: string, appConfig: string, yamlKeys: string, destEnvironment: string): Promise<void> {
         try {
-            await exec.exec(this.lodestarPath, ["app", "push", "--username", username, "--token", token,
+            await exec.exec("lodestar", ["app", "push", "--username", username, "--token", token,
             "--config-path", appConfig, "--yaml-keys", yamlKeys, "--environment", destEnvironment]);   
         } catch (error) {
             console.log(`error pushing app: ${error}`);
@@ -59,7 +45,7 @@ export class LodestarHandler {
 
     private async appPromote(username: string, token: string, appConfig: string, srcEnvironment: string, destEnvironment: string): Promise<void> {
         try {
-            await exec.exec(this.lodestarPath, ["app", "promote", "--username", username, "--token", token,
+            await exec.exec("lodestar", ["app", "promote", "--username", username, "--token", token,
             "--config-path", appConfig, "--src-env", srcEnvironment, "--dest-env", destEnvironment]);
         } catch (error) {
             console.log(`error promoting app: ${error}`);

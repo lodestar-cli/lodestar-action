@@ -5,18 +5,18 @@ branding:
   icon: git-pull-request
   color: blue
 inputs:
-  git-user:
-    description: 'user to authenticate with'
-    required: true
-  git-token:
-    description: 'token to authenticate with'
-    required: true
-  config-path:
-    description: 'path to app config file'
-    required: true
   command:
     description: 'lodestar command to run'
     required: true
+  git-user:
+    description: 'user to authenticate with'
+    required: false
+  git-token:
+    description: 'token to authenticate with'
+    required: false
+  config-path:
+    description: 'path to app config file'
+    required: false
   yaml-keys:
     description: 'keys to update when pushing app'
     required: false
