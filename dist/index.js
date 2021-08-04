@@ -8118,6 +8118,9 @@ class LodestarHandler {
     runCommand(inputs) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                if (inputs.gitToken == "" || inputs.gitUser == "" || inputs.configPath == "") {
+                    throw new Error(`a valid user, token, and path to an app config file must be set when attempting to run lodestar with this action`);
+                }
                 console.log("executing lodestar...");
                 switch (inputs.command) {
                     case "app push":
@@ -8146,7 +8149,7 @@ class LodestarHandler {
     appPush(username, token, appConfig, yamlKeys, destEnvironment) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield exec.exec(this.lodestarPath, ["app", "push", "--username", username, "--token", token,
+                yield exec.exec("lodestar", ["app", "push", "--username", username, "--token", token,
                     "--config-path", appConfig, "--yaml-keys", yamlKeys, "--environment", destEnvironment]);
             }
             catch (error) {
@@ -8252,7 +8255,7 @@ class BinaryHandler {
                 throw new Error("no binaries match platform: " + this.platform);
             }
             catch (error) {
-                console.log(`error getting assett ${error}`);
+                console.log(`error getting asset ${error}`);
                 process.exit(1);
             }
         });
@@ -8347,6 +8350,9 @@ function main() {
             let inputs = yield action.getInputs();
             let binary = new BinaryHandler(platform, inputs.version);
             yield binary.install();
+            if (inputs.command == "install") {
+                process.exit(0);
+            }
             let lodestar = new LodestarHandler(platform);
             yield lodestar.runCommand(inputs);
         }

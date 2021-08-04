@@ -23,6 +23,9 @@ export class LodestarHandler {
 
     public async runCommand(inputs: Inputs): Promise<void> {
         try {
+            if (inputs.gitToken == "" || inputs.gitUser == "" || inputs.configPath == "") {
+                throw new Error(`a valid user, token, and path to an app config file must be set when attempting to run lodestar with this action`)
+            }
             console.log("executing lodestar...")
             switch (inputs.command) {
                 case "app push":
@@ -49,7 +52,7 @@ export class LodestarHandler {
 
     private async appPush(username: string, token: string, appConfig: string, yamlKeys: string, destEnvironment: string): Promise<void> {
         try {
-            await exec.exec(this.lodestarPath, ["app", "push", "--username", username, "--token", token,
+            await exec.exec("lodestar", ["app", "push", "--username", username, "--token", token,
             "--config-path", appConfig, "--yaml-keys", yamlKeys, "--environment", destEnvironment]);   
         } catch (error) {
             console.log(`error pushing app: ${error}`);
